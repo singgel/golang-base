@@ -1,16 +1,19 @@
 /*
  * @Author: your name
  * @Date: 2022-04-11 14:34:40
- * @LastEditTime: 2022-04-11 14:36:43
+ * @LastEditTime: 2022-04-11 15:05:58
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: /struct_json/Users/bytedance/go/src/github.com/singgel/golang-base/struct_tag/main.go
- */
+
+
+ 因为slice和map这两种数据类型都包含了指向底层数据的指针，因此我们在需要复制它们时要特别注意。
+*/
 package main
 
 import (
-	"fmt"
 	"encoding/json"
+	"fmt"
 )
 
 //Student 学生
