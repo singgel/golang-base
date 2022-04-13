@@ -9,6 +9,14 @@ https://www.liwenzhou.com/archives/
 Go 语言设计与实现的作者  
 https://draveness.me/golang/  
 
+-   理解编译器的词法与语法解析、类型检查、中间代码生成以及机器码生成过程；
+-   理解数组、切片、哈希表和字符串等数据结构的内部表示以及常见操作的原理；
+-   理解 Go 语言中的函数、方法以及反射等语言特性；
+-   理解常见并发原语 `Mutex`、`WaitGroup` 以及扩展原语的使用和原理；
+-   理解 make、new、defer、select、for 和 range 等关键字的实现；
+-   理解运行时中的调度器、网络轮询器、内存分配器、垃圾收集器的实现原理；
+-   理解 HTTP、RPC、JSON 等标准库的设计与原理；
+
 ## 基础
 
 ### slice 和map 声明, 初始化方式, 初始化 空切片和空map
