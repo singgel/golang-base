@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-04-19 10:27:41
- * @LastEditTime: 2022-04-19 20:57:27
+ * @LastEditTime: 2022-04-19 20:58:29
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%A
  * @FilePath: /golang-base/golang_CSP.md
@@ -61,12 +61,9 @@ go里面有阻塞式和非阻塞式两种：
 注意：在调用 Signal 或者 Broadcast 之前，要确保目标协程处于 Wait 阻塞状态，不然会出现死锁问题。  
 * [sync.WaitGroup](https://github.com/singgel/golang-base/blob/main/sync_wg/main.go)  
 用来控制等待所有协程结束  
+
+
+## Context
 * [Context](https://github.com/singgel/golang-base/blob/main/sync_context/main.go)  
 一个任务会有很多个协程协作完成，一次 HTTP 请求也会触发很多个协程的启动，而这些协程有可能会启动更多的子协程，并且无法预知有多少层协程、每一层有多少个协程。  
 Context 就是用来简化解决这些问题的，并且是并发安全的。Context 是一个接口，它具备手动、定时、超时发出取消信号、传值等功能，主要用于控制多个协程之间的协作，尤其是取消操作。一旦取消指令下达，那么被 Context 跟踪的这些协程都会收到取消信号，就可以做清理和退出操作。  
-
-## Golang sync
-* sync.Cond：Wait、Signal、Broadcast  
-注意：在调用 Signal 或者 Broadcast 之前，要确保目标协程处于 Wait 阻塞状态，不然会出现死锁问题。
-* sync.WaitGroup  
-用来控制等待所有协程结束
