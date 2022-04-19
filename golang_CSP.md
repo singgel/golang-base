@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-04-19 10:27:41
- * @LastEditTime: 2022-04-19 17:07:16
+ * @LastEditTime: 2022-04-19 20:56:06
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%A
  * @FilePath: /golang-base/golang_CSP.md
@@ -37,7 +37,8 @@ Java1.5后，Doug Lea的Executor系列被包含在默认的JDK内，是典型的
 * 系统启动时，会启动一个独立的后台线程空闲挂起[runtime.gopark]，忙碌调出[将event中的pollDesc取出来，找到关联的阻塞Goroutine]  
 
 1.Go通过Goroutine的调度解决了CPU利用率的问题，goroutine 被 Go runtime 所调度，这一点和线程不一样。也就是说，Go 语言的并发是由 Go 自己所调度的，自己决定同时执行多少个 goroutine，什么时候执行哪几个。这些对于我们开发者来说完全透明，只需要在编码的时候告诉 Go 语言要启动几个 goroutine，至于如何调度执行，我们不用关心  
-2.互联网在线应用场景下，如果每个请求都扔到一个Goroutine里，当资源出现瓶颈的时候，会导致大量的Goroutine阻塞，最后用户请求超时。(比如带锁的共享资源，比如数据库连接等。这时候就需要用Goroutine池来进行控流)  
+2.操作系统的线程一般都有固定的栈内存（通常为2MB）,而 Go 语言中的 goroutine 非常轻量级，一个 goroutine 的初始栈空间很小（一般为2KB），所以在 Go 语言中一次创建数万个 goroutine 也是可能的。并且 goroutine 的栈不是固定的，可以根据需要动态地增大或缩小， Go 的 runtime 会自动为 goroutine 分配合适的栈空间  
+3.互联网在线应用场景下，如果每个请求都扔到一个Goroutine里，当资源出现瓶颈的时候，会导致大量的Goroutine阻塞，最后用户请求超时。(比如带锁的共享资源，比如数据库连接等。这时候就需要用Goroutine池来进行控流)  
 
 ## Golang CSP VS Actor
 * CSP模型里消息和Channel是主体，处理器是匿名的（channel与数据类型绑定）  
