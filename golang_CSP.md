@@ -1,11 +1,12 @@
 <!--
  * @Author: your name
  * @Date: 2022-04-19 10:27:41
- * @LastEditTime: 2022-04-19 20:58:29
+ * @LastEditTime: 2022-04-19 21:12:45
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%A
  * @FilePath: /golang-base/golang_CSP.md
 -->
+# CSP简述
 ## CSP form wiki
 [Communicating sequential processes](https://en.wikipedia.org/wiki/Communicating_sequential_processes)  
 翻译：在计算机科学中，交谈循序程序（英语：Communicating sequential processes，缩写为CSP），又译为通信顺序进程、交换消息的循序程序，是一种形式语言，用来描述并发性系统间进行交互的模式。它是叫做进程代数或进程演算的关于并发的数学理论家族的一员，基于了通过通道的消息传递。CSP高度影响了Occam的设计，也影响了编程语言如Limbo、RaftLib、Go、 Crystal和Clojure的core.async等。  
@@ -15,6 +16,7 @@
 在现代化身中，通道的概念成为一流的，这样做为我们提供了我们所寻求的间接性和独立性。  
 通道的一个关键特征是阻塞。在最原始的形式中，无缓冲通道充当会合点，任何读取器都将等待写入器，反之亦然。可以引入缓冲，但不鼓励无界缓冲，因为带阻塞的有界缓冲可能是协调起搏和背压的重要工具，确保系统不会承担超出其能力的工作。
 
+# 并发演进
 ## Actor CSP
 Actor模型非常适用于多个组件独立工作，相互之间仅仅依靠消息传递的情况。如果想在多个组件之间维持一致的状态  
 1.线程池方案  
@@ -22,9 +24,13 @@ Java1.5后，Doug Lea的Executor系列被包含在默认的JDK内，是典型的
 
 2.异步回调方案、GreenThread/Coroutine/Fiber方案(也就是大家常说的协程)  
 为了解决回调方法带来的难题，这种方案的思路是写代码的时候还是按顺序写，但遇到IO等阻塞调用时，将当前的代码片段暂停，保存上下文，让出当前线程。等IO事件回来，然后再找个线程让当前代码片段恢复上下文继续执行，写代码的时候感觉好像是同步的，仿佛在同一个线程完成的，但实际上系统可能切换了线程，但对程序无感。（全都在用户态）  
+* 缺点： *
+从一个线程切换到另一个线程需要完整的上下文切换。因为可能需要多次内存访问，索引这个切换上下文的操作开销较大，会增加运行的cpu周期。
 
 3.Goroutine  
 内置了一个调度器，实现了Coroutine的多线程并行调度，同时通过对网络等库的封装，对用户屏蔽了调度细节。提供了Channel机制，用于Goroutine之间通信，实现CSP并发模型（Communicating Sequential Processes）。因为Go的Channel是通过语法关键词提供的，对用户屏蔽了许多细节。其实Go的Channel和Java中的SynchronousQueue是一样的机制，如果有buffer其实就是ArrayBlockQueue。  
+* 好处： *
+区别于操作系统内核调度操作系统线程，goroutine 的调度是Go语言运行时（runtime）层面的实现，是完全由 Go 语言本身实现的一套调度系统——go scheduler。它的作用是按照一定的规则将所有的 goroutine 调度到操作系统线程上执行。下面[Golang Goroutine](#golang-goroutine)会有介绍
 
 ## Java Akka 
 * Akka（Scala,Java）基于线程和异步回调模式实现  
