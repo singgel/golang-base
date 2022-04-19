@@ -6,7 +6,7 @@
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%A
  * @FilePath: /golang-base/golang_CSP.md
 -->
-## form wiki
+## CSP form wiki
 [Communicating sequential processes](https://en.wikipedia.org/wiki/Communicating_sequential_processes)  
 翻译：在计算机科学中，交谈循序程序（英语：Communicating sequential processes，缩写为CSP），又译为通信顺序进程、交换消息的循序程序，是一种形式语言，用来描述并发性系统间进行交互的模式。它是叫做进程代数或进程演算的关于并发的数学理论家族的一员，基于了通过通道的消息传递。CSP高度影响了Occam的设计，也影响了编程语言如Limbo、RaftLib、Go、 Crystal和Clojure的core.async等。  
 
