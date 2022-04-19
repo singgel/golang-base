@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-04-19 10:27:41
- * @LastEditTime: 2022-04-19 16:24:50
+ * @LastEditTime: 2022-04-19 17:02:07
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%A
  * @FilePath: /golang-base/golang_CSP.md
@@ -54,7 +54,7 @@ go里面有阻塞式和非阻塞式两种：
 ---
 # 补充
 ## Golang sync
-* sync.Cond：Wait、Signal、Broadcast  
+* [sync.Cond：Wait、Signal、Broadcast]()  
 注意：在调用 Signal 或者 Broadcast 之前，要确保目标协程处于 Wait 阻塞状态，不然会出现死锁问题。
 * sync.WaitGroup  
 用来控制等待所有协程结束
