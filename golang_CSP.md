@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-04-19 10:27:41
- * @LastEditTime: 2022-04-20 21:15:56
+ * @LastEditTime: 2022-04-20 21:22:19
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%A
  * @FilePath: /golang-base/golang_CSP.md
@@ -49,7 +49,11 @@ Java1.5后，Doug Lea的Executor系列被包含在默认的JDK内，是典型的
 
 > **好处**： 区别于操作系统内核调度操作系统线程，goroutine 的调度是Go语言运行时（runtime）层面的实现，是完全由 Go 语言本身实现的一套调度系统——go scheduler。它的作用是按照一定的规则将所有的 goroutine 调度到操作系统线程上执行。下面[Golang Goroutine](#golang-goroutine)会有介绍  
 
-单从线程调度讲，Go语言相比起其他语言的优势在于OS线程是由OS内核来调度的， goroutine 则是由Go运行时（runtime）自己的调度器调度的，完全是在用户态下完成的， 不涉及内核态与用户态之间的频繁切换，包括内存的分配与释放，都是在用户态维护着一块大的内存池， 不直接调用系统的malloc函数（除非内存池需要改变），成本比调度OS线程低很多  
+单从线程调度讲，Go语言相比起其他语言的优势在于OS线程是由OS内核来调度的， goroutine 则是由Go运行时（runtime）自己的[调度器](https://draveness.me/golang/docs/part3-runtime/ch06-concurrency/golang-goroutine/)调度的，完全是在用户态下完成的， 不涉及内核态与用户态之间的频繁切换，包括内存的分配与释放，都是在用户态维护着一块大的内存池， 不直接调用系统的malloc函数（除非内存池需要改变），成本比调度OS线程低很多  
+
+举个数据说明：  
+每一次线程上下文的切换都需要消耗 ~1us 左右的时间，但是 Go 调度器对 Goroutine 的上下文切换约为~0.2us，减少了 80% 的额外开销  
+
 
 但是：池子里设置多少个Goroutine合适？  
 所以这个问题还是没有从更本上解决。  
@@ -73,6 +77,7 @@ Actor可独立更新，实现热升级
 
 ### Goroutine调度机制
 ![gpm](pic/gpm.png)
+[goroutine调度器发展](https://draveness.me/golang/docs/part3-runtime/ch06-concurrency/golang-goroutine/)
 - G：表示 goroutine，每执行一次go f()就创建一个 G，包含要执行的函数和上下文信息  
 - 全局队列（Global Queue）：存放等待运行的 G  
 - P：表示 goroutine 执行所需的资源，最多有 GOMAXPROCS 个，GOMAXPROCS 默认值是机器上的 CPU 核心数  
