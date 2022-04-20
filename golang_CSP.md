@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-04-19 10:27:41
- * @LastEditTime: 2022-04-20 11:48:50
+ * @LastEditTime: 2022-04-20 11:58:22
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%A
  * @FilePath: /golang-base/golang_CSP.md
@@ -92,7 +92,7 @@ chan <- int // 只发送通道，只能发送不能接收
 * [sync.Cond：Wait、Signal、Broadcast](https://github.com/singgel/golang-base/blob/main/sync_cond/main.go)  
 注意：在调用 Signal 或者 Broadcast 之前，要确保目标协程处于 Wait 阻塞状态，不然会出现死锁问题  
 
-## [sync/atomic]()
+* [sync/atomic](https://github.com/singgel/golang-base/blob/main/sync_atomic/main.go)  
 atomic包提供了底层的原子级内存操作，对于同步算法的实现很有用。这些函数必须谨慎地保证正确使用。除了某些特殊的底层应用，使用通道或者 sync 包的函数/类型实现同步更好  
 
 ## Context
