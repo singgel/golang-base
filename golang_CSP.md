@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-04-19 10:27:41
- * @LastEditTime: 2022-04-20 20:46:28
+ * @LastEditTime: 2022-04-20 20:47:58
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%A
  * @FilePath: /golang-base/golang_CSP.md
@@ -27,6 +27,7 @@
 > 内存（线程的栈空间）:每个线程都需要一个栈（Stack）空间来保存挂起（suspending）时的状态。Java的栈空间（64位VM）默认是1024k，不算别的内存，只是栈空间，启动1024个线程就要1G内存。
 > 调度成本（context-switch）:国外一篇论文专门分析线程切换的成本，基本上得出的结论是切换成本和栈空间使用大小直接相关。
 > CPU使用率:想提高CPU利用率，最大限度的压榨硬件资源，从这个角度考虑，我们应该用多少线程呢？没有固定答案，因为网络的时间不是固定的，另外比如锁，比如数据库连接池，就会更复杂。  
+
 因此我们从以上的讨论可以得出一个结论：  
 1. 线程的成本较高（内存，调度）不可能大规模创建  
 2. 应该由语言或者框架动态解决这个问题  
