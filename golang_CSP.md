@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-04-19 10:27:41
- * @LastEditTime: 2022-04-20 20:43:21
+ * @LastEditTime: 2022-04-20 20:45:24
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%A
  * @FilePath: /golang-base/golang_CSP.md
@@ -35,19 +35,19 @@
 Actor模型非常适用于多个组件独立工作，相互之间仅仅依靠消息传递的情况。如果想在多个组件之间维持一致的状态  
 1. 线程池方案  
 Java1.5后，Doug Lea的Executor系列被包含在默认的JDK内，是典型的线程池方案  
-* 缺点： *
-线程池一定程度上控制了线程的数量，实现了线程复用，降低了线程的使用成本。但还是没有解决数量的问题  
+缺点： 
+> 线程池一定程度上控制了线程的数量，实现了线程复用，降低了线程的使用成本。但还是没有解决数量的问题  
 
-2. 异步回调方案、GreenThread/Coroutine/Fiber方案(也就是大家常说的协程)  
+1. 异步回调方案、GreenThread/Coroutine/Fiber方案(也就是大家常说的协程)  
 为了解决回调方法带来的难题，这种方案的思路是写代码的时候还是按顺序写，但遇到IO等阻塞调用时，将当前的代码片段暂停，保存上下文，让出当前线程。等IO事件回来，然后再找个线程让当前代码片段恢复上下文继续执行，写代码的时候感觉好像是同步的，仿佛在同一个线程完成的，但实际上系统可能切换了线程，但对程序无感。（全都在用户态）  
-* 缺点： *
-从一个线程切换到另一个线程需要完整的上下文切换。因为可能需要多次内存访问，索引这个切换上下文的操作开销较大，会增加运行的cpu周期。
+缺点： 
+> 从一个线程切换到另一个线程需要完整的上下文切换。因为可能需要多次内存访问，索引这个切换上下文的操作开销较大，会增加运行的cpu周期。
 
-3. Goroutine  
+1. Goroutine  
 内置了一个调度器，实现了Coroutine的多线程并行调度，同时通过对网络等库的封装，对用户屏蔽了调度细节。提供了Channel机制，用于Goroutine之间通信，实现CSP并发模型（Communicating Sequential Processes）。因为Go的Channel是通过语法关键词提供的，对用户屏蔽了许多细节。其实Go的Channel和Java中的SynchronousQueue是一样的机制，如果有buffer其实就是ArrayBlockQueue  
-* 好处： *
-区别于操作系统内核调度操作系统线程，goroutine 的调度是Go语言运行时（runtime）层面的实现，是完全由 Go 语言本身实现的一套调度系统——go scheduler。它的作用是按照一定的规则将所有的 goroutine 调度到操作系统线程上执行。下面[Golang Goroutine](#golang-goroutine)会有介绍  
-单从线程调度讲，Go语言相比起其他语言的优势在于OS线程是由OS内核来调度的， goroutine 则是由Go运行时（runtime）自己的调度器调度的，完全是在用户态下完成的， 不涉及内核态与用户态之间的频繁切换，包括内存的分配与释放，都是在用户态维护着一块大的内存池， 不直接调用系统的malloc函数（除非内存池需要改变），成本比调度OS线程低很多  
+好处： 
+> 区别于操作系统内核调度操作系统线程，goroutine 的调度是Go语言运行时（runtime）层面的实现，是完全由 Go 语言本身实现的一套调度系统——go scheduler。它的作用是按照一定的规则将所有的 goroutine 调度到操作系统线程上执行。下面[Golang Goroutine](#golang-goroutine)会有介绍  
+> 单从线程调度讲，Go语言相比起其他语言的优势在于OS线程是由OS内核来调度的， goroutine 则是由Go运行时（runtime）自己的调度器调度的，完全是在用户态下完成的， 不涉及内核态与用户态之间的频繁切换，包括内存的分配与释放，都是在用户态维护着一块大的内存池， 不直接调用系统的malloc函数（除非内存池需要改变），成本比调度OS线程低很多  
 
 ## Java Akka 
 * Akka（Scala,Java）基于线程和异步回调模式实现  
@@ -76,7 +76,7 @@ Java1.5后，Doug Lea的Executor系列被包含在默认的JDK内，是典型的
 - Goroutine 调度器和操作系统调度器是通过 M 结合起来的，每个 M 都代表了1个内核线程，操作系统调度器负责把内核线程分配到 CPU 的核上执行  
 
 ## Golang CSP VS Actor
-* CSP模型里消息和Channel是主体，处理器是匿名的（channel与数据类型绑定）  
+1. CSP模型里消息和Channel是主体，处理器是匿名的（channel与数据类型绑定）  
 
 类比Java中的Future机制：  
 Java的Future机制是异步通信的机制，在主线程中可以启动一个FutureTask，启动之后要是不想阻塞的等待FutureTask的执行结果，可以在FutureTask执行的同时，非阻塞的干其他的事情，当我们要获得FutureTask结果的时候，调用Task的get方法获取结果，在get的时候，要是FutureTask已经执行完毕，就可以立即拿到结果，但要是FutureTask尚未执行完毕，就会阻塞的等待，直到FutureTask执行完毕，才能够继续执行下面的代码 
@@ -85,13 +85,13 @@ go里面有阻塞式和非阻塞式两种：
 没有声明容量的为阻塞式： retCh := make(chan string)  
 声明了容量的的Channel为非阻塞式： retCh := make(chan string, 1)  
 
-* Actor模型里Actor是主体，Mailbox（类似于CSP的Channel）是透明的（队列与类型不强相关）  
+2. Actor模型里Actor是主体，Mailbox（类似于CSP的Channel）是透明的（队列与类型不强相关）  
 
 ---
 # 补充
 ## Channel
 * [channel](https://github.com/singgel/golang-base/blob/main/chan_select/main.go)  
-：一个通道值是可以被垃圾回收掉的。通道通常由发送方执行关闭操作，并且只有在接收方明确等待通道关闭的信号时才需要执行关闭操作。它和关闭文件不一样，通常在结束操作之后关闭文件是必须要做的，但关闭通道不是必须的  
+一个通道值是可以被垃圾回收掉的。通道通常由发送方执行关闭操作，并且只有在接收方明确等待通道关闭的信号时才需要执行关闭操作。它和关闭文件不一样，通常在结束操作之后关闭文件是必须要做的，但关闭通道不是必须的  
 使用ch := make(chan int)创建的是无缓冲的通道，无缓冲的通道只有在有接收方能够接收值的时候才能发送成功，否则会一直处于等待发送的阶段。  
 Go语言中提供了单向通道来处理这种需要限制通道只能进行某种操作的情况。
 ``` go
