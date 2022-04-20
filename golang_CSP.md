@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-04-19 10:27:41
- * @LastEditTime: 2022-04-20 11:58:22
+ * @LastEditTime: 2022-04-20 15:21:20
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%A
  * @FilePath: /golang-base/golang_CSP.md
@@ -53,6 +53,7 @@ Java1.5后，Doug Lea的Executor系列被包含在默认的JDK内，是典型的
 3.互联网在线应用场景下，如果每个请求都扔到一个Goroutine里，当资源出现瓶颈的时候，会导致大量的Goroutine阻塞，最后用户请求超时。(比如带锁的共享资源，比如数据库连接等。这时候就需要用Goroutine池来进行控流)  
 
 ### Goroutine调度机制
+![gpm](pic/gpm.png)
 0.G：表示 goroutine，每执行一次go f()就创建一个 G，包含要执行的函数和上下文信息  
 1.全局队列（Global Queue）：存放等待运行的 G  
 2.P：表示 goroutine 执行所需的资源，最多有 GOMAXPROCS 个，GOMAXPROCS 默认值是机器上的 CPU 核心数  
