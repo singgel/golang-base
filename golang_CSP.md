@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-04-19 10:27:41
- * @LastEditTime: 2022-04-20 20:41:01
+ * @LastEditTime: 2022-04-20 20:43:21
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%A
  * @FilePath: /golang-base/golang_CSP.md
@@ -19,9 +19,9 @@
 通道的一个关键特征是阻塞。在最原始的形式中，无缓冲通道充当会合点，任何读取器都将等待写入器，反之亦然。可以引入缓冲，但不鼓励无界缓冲，因为带阻塞的有界缓冲可能是协调起搏和背压的重要工具，确保系统不会承担超出其能力的工作。
 
 # 并发演进
-[并发之痛 Thread，Goroutine，Actor](http://jolestar.com/parallel-programming-model-thread-goroutine-actor/)
-1.竞态条件（race conditions） 如果每个任务都是独立的，不需要共享任何资源，那线程也就非常简单。但世界往往是复杂的  
-2.依赖关系以及执行顺序 如果线程之间的任务有依赖关系，需要等待以及通知机制来进行协调  
+[并发之痛 Thread，Goroutine，Actor](http://jolestar.com/parallel-programming-model-thread-goroutine-actor/)  
+1. 竞态条件（race conditions） 如果每个任务都是独立的，不需要共享任何资源，那线程也就非常简单。但世界往往是复杂的  
+2. 依赖关系以及执行顺序 如果线程之间的任务有依赖关系，需要等待以及通知机制来进行协调  
 
 基于Java扩展：
 > 内存（线程的栈空间）:每个线程都需要一个栈（Stack）空间来保存挂起（suspending）时的状态。Java的栈空间（64位VM）默认是1024k，不算别的内存，只是栈空间，启动1024个线程就要1G内存。
@@ -33,17 +33,17 @@
 
 ## Actor CSP
 Actor模型非常适用于多个组件独立工作，相互之间仅仅依靠消息传递的情况。如果想在多个组件之间维持一致的状态  
-1.线程池方案  
+1. 线程池方案  
 Java1.5后，Doug Lea的Executor系列被包含在默认的JDK内，是典型的线程池方案  
 * 缺点： *
 线程池一定程度上控制了线程的数量，实现了线程复用，降低了线程的使用成本。但还是没有解决数量的问题  
 
-2.异步回调方案、GreenThread/Coroutine/Fiber方案(也就是大家常说的协程)  
+2. 异步回调方案、GreenThread/Coroutine/Fiber方案(也就是大家常说的协程)  
 为了解决回调方法带来的难题，这种方案的思路是写代码的时候还是按顺序写，但遇到IO等阻塞调用时，将当前的代码片段暂停，保存上下文，让出当前线程。等IO事件回来，然后再找个线程让当前代码片段恢复上下文继续执行，写代码的时候感觉好像是同步的，仿佛在同一个线程完成的，但实际上系统可能切换了线程，但对程序无感。（全都在用户态）  
 * 缺点： *
 从一个线程切换到另一个线程需要完整的上下文切换。因为可能需要多次内存访问，索引这个切换上下文的操作开销较大，会增加运行的cpu周期。
 
-3.Goroutine  
+3. Goroutine  
 内置了一个调度器，实现了Coroutine的多线程并行调度，同时通过对网络等库的封装，对用户屏蔽了调度细节。提供了Channel机制，用于Goroutine之间通信，实现CSP并发模型（Communicating Sequential Processes）。因为Go的Channel是通过语法关键词提供的，对用户屏蔽了许多细节。其实Go的Channel和Java中的SynchronousQueue是一样的机制，如果有buffer其实就是ArrayBlockQueue  
 * 好处： *
 区别于操作系统内核调度操作系统线程，goroutine 的调度是Go语言运行时（runtime）层面的实现，是完全由 Go 语言本身实现的一套调度系统——go scheduler。它的作用是按照一定的规则将所有的 goroutine 调度到操作系统线程上执行。下面[Golang Goroutine](#golang-goroutine)会有介绍  
@@ -60,20 +60,20 @@ Java1.5后，Doug Lea的Executor系列被包含在默认的JDK内，是典型的
 * 系统启动时，会启动一个独立的后台线程空闲挂起[runtime.gopark]，忙碌调出[将event中的pollDesc取出来，找到关联的阻塞Goroutine]  
 
 ### Goroutine优缺点
-1.Go通过Goroutine的调度解决了CPU利用率的问题，goroutine 被 Go runtime 所调度，这一点和线程不一样。也就是说，Go 语言的并发是由 Go 自己所调度的，自己决定同时执行多少个 goroutine，什么时候执行哪几个。这些对于我们开发者来说完全透明，只需要在编码的时候告诉 Go 语言要启动几个 goroutine，至于如何调度执行，我们不用关心  
+1. Go通过Goroutine的调度解决了CPU利用率的问题，goroutine 被 Go runtime 所调度，这一点和线程不一样。也就是说，Go 语言的并发是由 Go 自己所调度的，自己决定同时执行多少个 goroutine，什么时候执行哪几个。这些对于我们开发者来说完全透明，只需要在编码的时候告诉 Go 语言要启动几个 goroutine，至于如何调度执行，我们不用关心  
 
-2.操作系统的线程一般都有固定的栈内存（通常为2MB）,而 Go 语言中的 goroutine 非常轻量级，一个 goroutine 的初始栈空间很小（一般为2KB），所以在 Go 语言中一次创建数万个 goroutine 也是可能的。并且 goroutine 的栈不是固定的，可以根据需要动态地增大或缩小， Go 的 runtime 会自动为 goroutine 分配合适的栈空间  
+2. 操作系统的线程一般都有固定的栈内存（通常为2MB）,而 Go 语言中的 goroutine 非常轻量级，一个 goroutine 的初始栈空间很小（一般为2KB），所以在 Go 语言中一次创建数万个 goroutine 也是可能的。并且 goroutine 的栈不是固定的，可以根据需要动态地增大或缩小， Go 的 runtime 会自动为 goroutine 分配合适的栈空间  
 
-3.互联网在线应用场景下，如果每个请求都扔到一个Goroutine里，当资源出现瓶颈的时候，会导致大量的Goroutine阻塞，最后用户请求超时。(比如带锁的共享资源，比如数据库连接等。这时候就需要用Goroutine池来进行控流)  
+3. 互联网在线应用场景下，如果每个请求都扔到一个Goroutine里，当资源出现瓶颈的时候，会导致大量的Goroutine阻塞，最后用户请求超时。(比如带锁的共享资源，比如数据库连接等。这时候就需要用Goroutine池来进行控流)  
 
 ### Goroutine调度机制
 ![gpm](pic/gpm.png)
-0.G：表示 goroutine，每执行一次go f()就创建一个 G，包含要执行的函数和上下文信息  
-1.全局队列（Global Queue）：存放等待运行的 G  
-2.P：表示 goroutine 执行所需的资源，最多有 GOMAXPROCS 个，GOMAXPROCS 默认值是机器上的 CPU 核心数  
-3.P 的本地队列：同全局队列类似，存放的也是等待运行的G，存的数量有限，不超过256个。新建 G 时，G 优先加入到 P 的本地队列，如果本地队列满了会批量移动部分 G 到全局队列  
-4.M：线程想运行任务就得获取 P，从 P 的本地队列获取 G，当 P 的本地队列为空时，M 也会尝试从全局队列或其他 P 的本地队列获取 G。M 运行 G，G 执行之后，M 会从 P 获取下一个 G，不断重复下去  
-5.Goroutine 调度器和操作系统调度器是通过 M 结合起来的，每个 M 都代表了1个内核线程，操作系统调度器负责把内核线程分配到 CPU 的核上执行  
+- G：表示 goroutine，每执行一次go f()就创建一个 G，包含要执行的函数和上下文信息  
+- 全局队列（Global Queue）：存放等待运行的 G  
+- P：表示 goroutine 执行所需的资源，最多有 GOMAXPROCS 个，GOMAXPROCS 默认值是机器上的 CPU 核心数  
+- P 的本地队列：同全局队列类似，存放的也是等待运行的G，存的数量有限，不超过256个。新建 G 时，G 优先加入到 P 的本地队列，如果本地队列满了会批量移动部分 G 到全局队列  
+- M：线程想运行任务就得获取 P，从 P 的本地队列获取 G，当 P 的本地队列为空时，M 也会尝试从全局队列或其他 P 的本地队列获取 G。M 运行 G，G 执行之后，M 会从 P 获取下一个 G，不断重复下去  
+- Goroutine 调度器和操作系统调度器是通过 M 结合起来的，每个 M 都代表了1个内核线程，操作系统调度器负责把内核线程分配到 CPU 的核上执行  
 
 ## Golang CSP VS Actor
 * CSP模型里消息和Channel是主体，处理器是匿名的（channel与数据类型绑定）  
