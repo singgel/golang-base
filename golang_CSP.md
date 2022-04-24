@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-04-19 10:27:41
- * @LastEditTime: 2022-04-24 14:52:56
+ * @LastEditTime: 2022-04-24 15:03:03
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%A
  * @FilePath: /golang-base/golang_CSP.md
@@ -23,9 +23,9 @@
 2. **依赖关系以及执行顺序** 
 
 基于Java扩展来讲一下怎么应对的这两个问题：
-> 1. Mutex(Lock) （Go里的sync包, Java的concurrent包）  
-> 2. semaphore 信号量、volatile关键词  
-> 3. CAS机制保证原子性  
+> 1. Mutex(Lock) （Go里的[sync](#golang-sync)包, Java的concurrent包）  
+> 2. semaphore 信号量、volatile关键词（Go里面的[sync](#golang-sync).cond使用）  
+> 3. CAS机制保证原子性(Go里面的[sync/atomic](#golang-sync)包)  
 但是还是存在问题：    
 > 1. **内存（线程的栈空间）**:每个线程都需要一个栈（Stack）空间来保存挂起（suspending）时的状态。Java的栈空间（64位VM）默认是1024k，不算别的内存，只是栈空间，启动1024个线程就要1G内存。
 > 2. **调度成本（context-switch）**:国外一篇论文专门分析线程切换的成本，基本上得出的结论是切换成本和栈空间使用大小直接相关。
@@ -69,9 +69,9 @@ Actor可独立更新，实现热升级
 Java的Future机制是异步通信的机制，在主线程中可以启动一个FutureTask，启动之后要是不想阻塞的等待FutureTask的执行结果，可以在FutureTask执行的同时，非阻塞的干其他的事情，当我们要获得FutureTask结果的时候，调用Task的get方法获取结果，在get的时候，要是FutureTask已经执行完毕，就可以立即拿到结果，但要是FutureTask尚未执行完毕，就会阻塞的等待，直到FutureTask执行完毕，才能够继续执行下面的代码 
 
 go里面有阻塞式和非阻塞式两种： 
-没有声明容量的为阻塞式： retCh := make(chan string)  
+没有声明容量的为阻塞式，下文中[chan部分](#channel)： retCh := make(chan string)  
 声明了容量的的Channel为非阻塞式： retCh := make(chan string, 1)  
-但是大家跟多还是结合[sync.WaitGroup](#golang-sync)使用  
+但是大家跟多还是结合下文中[sync.WaitGroup](#golang-sync)使用  
 
 2. 数据传递  
 CSP模型里消息和Channel是主体，处理器是匿名的（channel与数据类型绑定）
@@ -98,9 +98,9 @@ Quasar (Java) 为了解决Akka的阻塞回调问题，通过字节码增强的�
 - M：线程想运行任务就得获取 P，从 P 的本地队列获取 G，当 P 的本地队列为空时，M 也会尝试从全局队列或其他 P 的本地队列获取 G。M 运行 G，G 执行之后，M 会从 P 获取下一个 G，不断重复下去  
 - Goroutine 调度器和操作系统调度器是通过 M 结合起来的，每个 M 都代表了1个内核线程，操作系统调度器负责把内核线程分配到 CPU 的核上执行  
 
-* 内置了Coroutine机制。因为要用户态的调度，必须有可以让代码片段可以暂停/继续的机制。内置了一个调度器，实现了Coroutine的多线程并行调度，同时通过对网络等库的封装，对用户屏蔽了调度细节  
-* Go实现了M:N的调度，Goroutine任务执行，相当于一种rebalance机制  
-* 系统启动时，会启动一个独立的后台线程空闲挂起[runtime.gopark]，忙碌调出[将event中的pollDesc取出来，找到关联的阻塞Goroutine]  
+> 1.内置了Coroutine机制。因为要用户态的调度，必须有可以让代码片段可以暂停/继续的机制。内置了一个调度器，实现了Coroutine的多线程并行调度，同时通过对网络等库的封装，**对用户屏蔽了调度细节**  
+> 2.Go实现了M:N的调度，Goroutine任务执行，相当于一种**rebalance机制**  
+> 3.系统启动时，会启动一个独立的后台线程空闲挂起[runtime.gopark]，忙碌调出[将event中的pollDesc取出来，找到关联的阻塞Goroutine]  
 
 ### Goroutine优缺点
 优点：  
@@ -110,7 +110,7 @@ Quasar (Java) 为了解决Akka的阻塞回调问题，通过字节码增强的�
 
 缺点：  
 1. 互联网在线应用场景下，如果每个请求都扔到一个Goroutine里，当资源出现瓶颈的时候，会导致大量的Goroutine阻塞，最后用户请求超时。(比如带锁的共享资源，比如数据库连接等。这时候就需要用Goroutine池来进行控流)  
-但是池子里设置多少个Goroutine合适？  
+但是池子里设置多少个Goroutine合适??????????？  
 所以这个问题还是没有从更本上解决。    
 
 ---
