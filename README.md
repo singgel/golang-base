@@ -5,6 +5,9 @@
 https://www.liwenzhou.com/archives/  
 [视频地址](https://www.bilibili.com/video/BV16E411H7og)  
 
+### 欧长坤 个人博主学习站  
+https://golang.design/  
+
 ### 一个字节同学的个人博主学习站  
 Go 语言设计与实现的作者  
 https://draveness.me/golang/  
