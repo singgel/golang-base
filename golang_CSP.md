@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-04-19 10:27:41
- * @LastEditTime: 2022-04-24 18:20:04
+ * @LastEditTime: 2022-04-25 11:40:27
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%A
  * @FilePath: /golang-base/golang_CSP.md
@@ -135,6 +135,13 @@ chan <- int // 只发送通道，只能发送不能接收
 
 * [sync/atomic](https://github.com/singgel/golang-base/blob/main/sync_atomic/main.go)  
 atomic包提供了底层的原子级内存操作，对于同步算法的实现很有用。这些函数必须谨慎地保证正确使用。除了某些特殊的底层应用，使用通道或者 sync 包的函数/类型实现同步更好  
+
+* [sync.Pool](https://github.com/singgel/golang-base/blob/main/sync_pool/main.go)  
+A Pool is safe for use by multiple goroutines simultaneously. sync.Pool 本质用途是增加临时对象的重用率，减少 GC 负担  
+具有以下缺点：
+1. Pool 池里的元素随时可能释放掉，释放策略完全由 runtime 内部管理；  
+2. Get 获取到的元素对象可能是刚创建的，也可能是之前创建好 cache 住的。使用者无法区分；  
+3. Pool 池里面的元素个数你无法知道；  
 
 ## Context
 * [Context](https://github.com/singgel/golang-base/blob/main/sync_context/main.go)  
