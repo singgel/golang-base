@@ -1,24 +1,45 @@
-# golang-base
+# Go Language Basics & Deep Dive
 
-### liwenzhou个人博主学习站
-一个个人的学习站,博主在每一期都录制了视频  
-https://www.liwenzhou.com/archives/  
-[视频地址](https://www.bilibili.com/video/BV16E411H7og)  
+A comprehensive learning resource for Go programming language, covering fundamentals to advanced concepts with practical examples.
 
-### 欧长坤 个人博主学习站  
-https://golang.design/  
+## 📚 Overview
 
-### 一个字节同学的个人博主学习站  
-Go 语言设计与实现的作者  
-https://draveness.me/golang/  
+This repository contains structured learning materials for mastering Go programming language, including:
 
--   理解编译器的词法与语法解析、类型检查、中间代码生成以及机器码生成过程；
--   理解数组、切片、哈希表和字符串等数据结构的内部表示以及常见操作的原理；
--   理解 Go 语言中的函数、方法以及反射等语言特性；
--   理解常见并发原语 `Mutex`、`WaitGroup` 以及扩展原语的使用和原理；
--   理解 make、new、defer、select、for 和 range 等关键字的实现；
--   理解运行时中的调度器、网络轮询器、内存分配器、垃圾收集器的实现原理；
--   理解 HTTP、RPC、JSON 等标准库的设计与原理；
+- **Basic Fundamentals**: Data structures, control flow, functions
+- **Advanced Concepts**: Concurrency patterns, synchronization primitives, reflection
+- **Runtime Understanding**: Scheduler, memory allocation, garbage collection
+- **Best Practices**: Error handling, design patterns, performance optimization
+
+## 🎯 Learning Resources
+
+### Official & Community References
+
+- **liwenzhou's Learning Site** (with video tutorials)  
+  https://www.liwenzhou.com/archives/  
+  Videos: https://www.bilibili.com/video/BV16E411H7og  
+
+- **golang.design** - Design and Implementation  
+  https://golang.design/  
+
+- **Go Language Design & Implementation** - By ByteDance Engineer  
+  https://draveness.me/golang/  
+
+- **lianglianglee's Comprehensive Courses** - Alibaba Engineer  
+  Covers distributed systems, databases, caching, and more  
+  https://learn.lianglianglee.com/
+
+## 📖 Learning Objectives
+
+Master the following key areas:
+
+-   **Compiler Theory**: Lexical and syntax parsing, type checking, code generation
+-   **Data Structures**: Arrays, slices, maps, strings - internal representation and operations
+-   **Language Features**: Functions, methods, reflection, and interfaces
+-   **Concurrency**: Mutex, WaitGroup, channels, and advanced synchronization primitives
+-   **Keywords**: Implementation details of make, new, defer, select, for, range
+-   **Runtime**: Scheduler, network poller, memory allocator, garbage collector
+-   **Standard Library**: HTTP, RPC, JSON design and principles
 
 ### 一个阿里同学的个人博主学习站  
 lianglianglee这个博主的知识面很宽而且在每个领域都有一定深度的认识，最起码文章上面写的不是流水账，很推荐  
